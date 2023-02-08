@@ -1,2 +1,2 @@
 # Curso Python
- Curso de Python da HashTag
+ Repositório de códigos e projetos do curso python da hashtag treinamentos
