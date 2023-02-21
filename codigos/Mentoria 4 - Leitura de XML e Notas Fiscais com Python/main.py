@@ -1,42 +1,69 @@
 import xmltodict
 
 # Abrir e ler arquivo
-with open('NFs Finais/DANFENespresso.xml', 'rb') as arquivo:
-    documento = xmltodict.parse(arquivo)
+def ler_xml_danfe(nota):
+    with open(nota, 'rb') as arquivo:
+        documento = xmltodict.parse(arquivo)
 
-dic_notafiscal = documento['nfeProc']['NFe']['infNFe']
+    dic_notafiscal = documento['nfeProc']['NFe']['infNFe']
 
-valor_total = dic_notafiscal['total']['ICMSTot']['vNF']
-cnpj_vendeu = dic_notafiscal['emit']['CNPJ']
-nome_vendeu = dic_notafiscal['emit']['xNome']
-cpf_comprou = dic_notafiscal['dest']['CPF']
-nome_comprou = dic_notafiscal['dest']['xNome']
-produtos = dic_notafiscal['det']
-lista_produtos = []
-for produto in produtos:
-    nome_produto = produto['prod']['xProd']
-    valor_produto = produto['prod']['vProd']
-    lista_produtos.append((nome_produto, valor_produto))
+    valor_total = dic_notafiscal['total']['ICMSTot']['vNF']
+    cnpj_vendeu = dic_notafiscal['emit']['CNPJ']
+    nome_vendeu = dic_notafiscal['emit']['xNome']
+    cpf_comprou = dic_notafiscal['dest']['CPF']
+    nome_comprou = dic_notafiscal['dest']['xNome']
+    produtos = dic_notafiscal['det']
+    lista_produtos = []
+    for produto in produtos:
+        nome_produto = produto['prod']['xProd']
+        valor_produto = produto['prod']['vProd']
+        lista_produtos.append((nome_produto, valor_produto))
 
-resposta = {'valor_total': [valor_total],
-            'cnpj_vendeu': [cnpj_vendeu],
-            'nome_vendeu': [nome_vendeu],
-            'cpf_comprou': [cpf_comprou],
-            'nome_comprou': [nome_comprou],
-            'Lista_produtos': [lista_produtos]
-            }
-print(resposta)
-# Convertendo o dicionario em Tupla
-resposta = resposta.items()
+    resposta = {'valor_total': [valor_total],
+                'cnpj_vendeu': [cnpj_vendeu],
+                'nome_vendeu': [nome_vendeu],
+                'cpf_comprou': [cpf_comprou],
+                'nome_comprou': [nome_comprou],
+                'Lista_produtos': [lista_produtos]
+                }
+    return resposta
 
-for item in resposta:
-    dicionario, valor = item
-    print(dicionario, ' = ', valor)
+def ler_xml_servico(nota):
+    with open(nota, 'rb') as arquivo:
+        documento = xmltodict.parse(arquivo)
 
-import pandas as pd
+    dic_notafiscal = documento['ConsultarNfseResposta']['ListaNfse']['CompNfse']['Nfse']['InfNfse']
 
-tabela = pd.DataFrame.from_dict(resposta)
-tabela.to_excel('NFs.xlsx')
+    valor_total = dic_notafiscal['Servico']['Valores']['ValorServicos']
+    cnpj_vendeu = dic_notafiscal['PrestadorServico']['IdentificacaoPrestador']['Cnpj']
+    nome_vendeu = dic_notafiscal['PrestadorServico']['RazaoSocial']
+    cpf_comprou = dic_notafiscal['TomadorServico']['IdentificacaoTomador']['CpfCnpj']['Cnpj']
+    nome_comprou = dic_notafiscal['TomadorServico']['RazaoSocial']
+    produtos = dic_notafiscal['Servico']['Discriminacao']
+
+    resposta = {'valor_total': [valor_total],
+                'cnpj_vendeu': [cnpj_vendeu],
+                'nome_vendeu': [nome_vendeu],
+                'cpf_comprou': [cpf_comprou],
+                'nome_comprou': [nome_comprou],
+                'Lista_produtos': [produtos]
+                }
+    return resposta
+
+import os
+
+lista_arquivos = os.listdir('NFs Finais') # Lista os nomes de arquivos de uma pasta
+
+for arquivo in lista_arquivos: # Para cada arquivo
+    if 'xml' in arquivo: # Se tem xml no nome do arquivo
+        if 'DANFE' in arquivo: # Se tem DANFE no nome do arquivo
+            print(ler_xml_danfe(f'NFs Finais/{arquivo}')) # rodar o leitor de XML de DANFE para esse arquivo
+        else:
+            print(ler_xml_servico(f'NFs Finais/{arquivo}'))
+
+# import pandas as pd
+# # tabela = pd.DataFrame.from_dict(resposta)
+# # tabela.to_excel('NFs.xlsx')
 
 
 
