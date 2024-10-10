@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "criação-de-rest-api"
+version = "0.1.0"
+description = ""
+authors = ["Maik Rodrigues <maikrs007@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "^3.0.3"
+pandas = "^2.2.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
