@@ -1,0 +1,14 @@
+1. poetry config virtualenvs.in-project true
+Cria ambientes virtuais dentro do diretório do projeto.
+
+2. poetry new web-scraping
+Cria um novo projeto chamado "web-scraping".
+
+3. pyenv local 3.12.1
+Define a versão do Python como 3.12.1 para o diretório atual.
+
+4. poetry env use 3.12.1
+Configura o Poetry para usar o Python 3.12.1 no ambiente virtual.
+
+5. poetry add selenium
+Adiciona a biblioteca Selenium como dependência do projeto.
